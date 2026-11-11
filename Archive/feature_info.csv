@@ -1,0 +1,4 @@
+﻿wind_farm,wind_speed_feature_name,possible_power_feature_name,gird_power_feature_name,main_mv,subsidiary_mv_1,subsidiary_mv_2,subsidiary_mv_3
+A,wind_speed_3_avg,power_29_avg,power_30_avg,power_30,sensor_38,sensor_41,sensor_11
+B,wind_speed_61_avg,power_58_avg,power_58_avg,,,,
+C,-,-,-,,,,

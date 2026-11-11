@@ -1,0 +1,245 @@
+# 标记（E*）表示影响较大且通常不适合自动学习的参数。
+# The (E*) marker identifies influential parameters that generally should not be learned automatically.
+# 标记（H*）表示超参数；自动寻优时需将 automatic_conf 设为 True。
+# The (H*) marker identifies hyperparameters; set automatic_conf to True to optimize them automatically.
+
+# 程序选项
+# Program Options
+
+# [布尔值] 是否加载同一风机的多个连续事件；False 表示仅加载一个事件。
+# [BOOL] Whether to load multiple consecutive events from the same wind turbine; False loads one event only.
+multiple_comma: False
+
+# [布尔值] 是否自动搜索并优化 TFT 超参数；False 表示使用本文件中设置的参数。
+# [BOOL] Whether to search for and optimize TFT hyperparameters automatically; False uses the values defined in this file.
+automatic_conf: True
+
+# [布尔值] 是否抑制 Lightning、CUDA 和 Optuna 的非必要日志信息。
+# [BOOL] Whether to suppress nonessential log messages from Lightning, CUDA, and Optuna.
+disable_log_info: True
+
+# 原始数据集索引
+# Original Dataset IdentifiersTrue
+
+# [字符串] 要处理的风场标识符。True
+# [STR] Identifier of the wind farm to process.
+wind_farm_id: "A"
+
+# [整数] 要处理的风机标识符；仅在 multiple_comma 为 True 时有效。
+# [INT] Identifier of the wind turbine to process; used only when multiple_comma is True.
+turbine_id: 0
+
+# [整数] 要处理的事件及其数据集标识符；仅在 multiple_comma 为 False 时有效。
+# [INT] Identifier of the event and its dataset; used only when multiple_comma is False.
+event_id: 0
+
+# 数据预处理参数
+# Data Preprocessing Parameters
+
+# [布尔值] 是否按实际并网功率执行弃风限电清洗；False 表示使用可能功率进行分箱离群值清洗。
+# [BOOL] Whether to remove curtailment records using actual grid power; False uses possible power for binned outlier removal.
+data_cleaning_rules: False
+
+# [浮点数] 分箱后离群值阈值的标准差倍数；建议取 2 至 3。
+# [FLOAT] Number of standard deviations used as the binned outlier threshold; values from 2 to 3 are recommended.
+cl_std_ratio: 3
+
+# [整数] 等频分箱的箱数；建议取 20 至 50。
+# [INT] Number of equal-frequency bins; values from 20 to 50 are recommended.
+number_of_bins: 40
+
+# [浮点数] 基于皮尔逊相关系数绝对值进行变量分组的阈值（E*）。
+# [FLOAT] Threshold for grouping variables by the absolute Pearson correlation coefficient (E*).
+pccs_threshold: 0.9
+
+# [整数] 训练集的样本数；设为 -1 时根据数据中的 train_test 标签划分。
+# [INT] Number of training samples; set to -1 to split the data using the train_test labels.
+train_size: 17280
+
+# [整数] 测试数据前附加的历史上下文长度；设为 -1 时取测试集长度的一半。
+# [INT] Length of historical context prepended to the test data; set to -1 to use half of the test-set length.
+posterior_size: -1
+
+# [整数] TFT 编码器的最大输入序列长度；参考值为 144（E*）。
+# [INT] Maximum input-sequence length of the TFT encoder; 144 is a reference value (E*).
+max_encoder_length: 144
+
+# [整数] TFT 编码器的最小输入序列长度；设为 -1 时取最大编码器长度的一半。
+# [INT] Minimum input-sequence length of the TFT encoder; set to -1 to use half of the maximum encoder length.
+min_encoder_length: -1
+
+# [整数] TFT 解码器的预测序列长度；当前程序仅支持 1。
+# [INT] Prediction-sequence length of the TFT decoder; the current program supports only 1.
+decoder_length: 1
+
+# [布尔值] 是否向时间序列数据集添加相对时间索引特征。
+# [BOOL] Whether to add a relative time-index feature to each time-series dataset.
+add_relative_time_idx: True
+
+# [布尔值] 是否向时间序列数据集添加编码器长度特征。
+# [BOOL] Whether to add an encoder-length feature to each time-series dataset.
+add_encoder_length: True
+
+# TFT 模型结构参数
+# TFT Model Architecture Parameters
+
+# [整数] TFT 中 LSTM 层的数量（H*）。
+# [INT] Number of LSTM layers in the TFT model (H*).
+lstm_layers: 2
+
+# [整数] TFT 主网络的隐藏层宽度，是主要超参数之一（H*）。
+# [INT] Hidden-layer width of the main TFT network and one of its primary hyperparameters (H*).
+hidden_size: 100
+
+# [整数] 多头注意力机制的注意力头数量；4 是常用默认值（H*）。
+# [INT] Number of heads in the multi-head attention mechanism; 4 is a common default (H*).
+attention_head_size: 4
+
+# [浮点数] 模型的丢弃率；0.1 是常用参考值（H*）。
+# [FLOAT] Model dropout rate; 0.1 is a common reference value (H*).
+dropout: 0.1
+
+# [整数] 连续变量处理网络的隐藏层宽度（H*）。
+# [INT] Hidden-layer width used to process continuous variables (H*).
+hidden_continuous_size: 64
+
+# [整数] 验证指标停止改善多少个周期后降低学习率（H*）。
+# [INT] Number of epochs without validation improvement before reducing the learning rate (H*).
+reduce_on_plateau_patience: 4
+
+# [浮点数] 初始学习率；0.001 是常用参考值（E*）。
+# [FLOAT] Initial learning rate; 0.001 is a common reference value (E*).
+learning_rate: 0.0006
+
+# [映射] 分位数预测及其损失函数设置。
+# [MAPPING] Settings for quantile forecasting and its loss function.
+quan_forecast:
+  # [布尔值] 是否启用分位数预测；False 时使用点预测损失。
+  # [BOOL] Whether to enable quantile forecasting; False uses a point-forecast loss.
+  true_or_false: True
+
+  # [列表] 启用分位数预测时使用的分位点。
+  # [LIST] Quantiles used when quantile forecasting is enabled.
+  quantile: [0.1, 0.3, 0.5, 0.7, 0.9]
+
+# [整数] 模型内部训练日志的记录间隔；小于或等于 0 时禁用。
+# [INT] Interval for the model's internal training logs; values less than or equal to 0 disable them.
+log_interval: -1
+
+# [字符串] 模型优化器名称；可使用 "adamw"，不建议使用 "sgd"。
+# [STR] Name of the model optimizer; "adamw" is supported, while "sgd" is not recommended.
+optimizer: "adam"
+
+# 硬件参数
+# Hardware Parameters
+
+# [整数] 数据加载器使用的工作进程数，应根据 CPU 和内存资源调整。
+# [INT] Number of data-loader worker processes; adjust it to the available CPU and memory resources.
+num_workers: 12
+
+# [字符串] 训练所用的加速器类型，例如 "cpu" 或 "gpu"。
+# [STR] Type of accelerator used for training, such as "cpu" or "gpu".
+accelerator: "auto"
+
+# [整数] 训练所用的设备数量。
+# [INT] Number of devices used for training.
+devices: 1
+
+# 信息输出与日志参数
+# Output and Logging Parameters
+
+# [布尔值] 是否显示模型结构摘要。
+# [BOOL] Whether to display the model architecture summary.
+enable_model_summary: True
+
+# [布尔值] 是否显示训练进度条。
+# [BOOL] Whether to display the training progress bar.
+enable_progress_bar: True
+
+# [布尔值] 是否启用 Lightning 日志记录器。
+# [BOOL] Whether to enable the Lightning logger.
+logger: False
+
+# [整数] 每隔多少个训练步记录一次日志；-1 表示不记录。
+# [INT] Number of training steps between log entries; -1 disables step logging.
+log_every_n_steps: -1
+
+# TFT 训练器参数
+# TFT Trainer Parameters
+
+# [整数] 正式训练的最大轮数，应根据模型收敛情况设置。
+# [INT] Maximum number of epochs for full training; set it according to model convergence.
+max_epochs: 1
+
+# [整数] 每个训练批次的样本数，应根据 GPU 显存调整。
+# [INT] Number of samples per training batch; adjust it to the available GPU memory.
+batch_size: 64
+
+# [整数或字符串] Lightning 训练精度设置；32 表示标准单精度。
+# [INT OR STR] Lightning training-precision setting; 32 selects standard single precision.
+precision: 32
+
+# [字符串] float32 矩阵乘法的精度等级，用于权衡性能与数值精度。
+# [STR] Precision level for float32 matrix multiplication, balancing performance and numerical accuracy.
+matmul_precision: "medium"
+
+# [整数] 正式训练前执行的验证健全性检查步数；0 表示跳过。
+# [INT] Number of validation sanity-check steps performed before training; 0 skips them.
+num_sanity_val_steps: 0
+
+# TFT 超参数寻优参数
+# TFT Hyperparameter Optimization Parameters
+
+# [整数] 每次超参数试验的最大训练轮数，不应超过 max_epochs。
+# [INT] Maximum number of training epochs per hyperparameter trial; it should not exceed max_epochs.
+max_epochs_of_hyperopt: 1
+
+# [整数] 超参数优化的试验次数；通常建议取 20 至 50。
+# [INT] Number of hyperparameter optimization trials; values from 20 to 50 are generally recommended.
+trials_epoch: 2
+
+# TFT 在线学习参数
+# TFT Online-Learning Parameters
+
+# [整数] 在线模型验证使用的历史后验数据步数。
+# [INT] Number of historical posterior data steps used for online-model validation.
+posterior_step: 4320
+
+# [整数] 每次在线更新时训练的新候选模型数量（E*）。
+# [INT] Number of new candidate models trained during each online update (E*).
+richness: 1
+
+# [整数] 触发一次在线更新的新数据步数。
+# [INT] Number of new data steps that trigger one online update.
+update_step: 1008
+
+# [整数] 每次在线更新的采样总量相当于多少个 update_step 批次。
+# [INT] Number of update_step-sized batches sampled during each online update.
+per_ol_batches: 1
+
+# [整数] 在线学习开始前要求的最小静态训练数据长度。
+# [INT] Minimum length of static training data required before online learning begins.
+min_static_train_len: 17280
+
+# [浮点数] 历史样本时间权重的幂指数；数值越大，近期样本的权重越高。
+# [FLOAT] Exponent applied to historical-sample time weights; larger values favor more recent samples.
+attenuation_coefficient: 3
+
+# [浮点数] 每次在线采样中近期高密度样本所占的比例，应位于 0 至 1 之间。
+# [FLOAT] Proportion of recent high-density samples in each online sample; it should be between 0 and 1.
+emphasis_coefficient: 0.2
+
+# [整数] 每个候选模型在一次在线更新中的最大训练轮数。
+# [INT] Maximum number of training epochs for each candidate model during one online update.
+per_ol_epochs: 1
+
+# 故障预警参数
+# TFT Fault-Warning Parameters
+
+# [浮点数] EWMA 平滑参数
+# [FLOAT] EWMA smoothing factor for absolute prediction errors.
+alarm_ewma_alpha: 0.2
+
+# [浮点数] 告警阈值
+# [FLOAT] Alarm threshold
+alarm_threshold_std_ratio: 3.0

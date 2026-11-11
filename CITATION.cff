@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it using this citation metadata."
+type: software
+title: "APEN TFT Monitoring and Fault-Warning Model"
+authors:
+  - family-names: "Wang"
+    given-names: "Zhen"
+abstract: "Wind-turbine SCADA data processing, offline TFT training, online learning, and EWMA fault warning."
+license: MIT
+keywords:
+  - wind turbines
+  - SCADA
+  - temporal fusion transformer
+  - online learning
+  - fault warning

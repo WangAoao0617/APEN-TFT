@@ -1,0 +1,66 @@
+# 原始数据和衍生数据
+# Raw and derived datasets
+
+# 大型风场数据集
+# Large wind-farm datasets
+Archive/**/datasets/
+
+# 训练模型和预测结果
+# Trained models and prediction results
+
+# 统一中转目录
+# Unified transit directory
+Transit/
+
+# 可视化汇报文件
+# Visualization reports
+
+# 排除整个可视化目录
+# Ignore the entire visualization directory
+/Figures/
+
+
+# Python 缓存和临时文件
+# Python cache and temporary files
+
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+
+# 本地 Python 环境
+# Local Python environments
+
+.venv/
+venv/
+env/
+.conda/
+
+
+# 本地日志和数据库
+# Local logs and databases
+
+*.log
+*.tmp
+*.db
+*.sqlite
+*.sqlite3
+
+
+# 编辑器设置
+# Editor settings
+
+.vscode/
+.idea/
+
+
+# Windows 系统文件
+# Windows system files
+
+Thumbs.db
+desktop.ini
